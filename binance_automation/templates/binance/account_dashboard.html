@@ -1,0 +1,42 @@
+<!-- Element -->
+<div class="col-md-6 my-2">
+    <div class="h-100 p-5 bg-body-tertiary border rounded-3 position-relative">
+        <h2>
+            {{ binance_account_id.name }}
+            <small class="text-body-secondary">{{ binance_account_id.code }}</small>
+        </h2>
+        {% csrf_token %}
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#CredencialsModal{{ binance_account_id.id }}" type="button">Ver Credenciales</button>
+        <button class="btn btn-secondary">Actualizar Balance</button>
+        {% comment %} <button class="btn btn-secondary" id="GetFuturesTransferHistory" data-binance-account-id={{ binance_account_id.id }}>Historial de transacciones futuras</button> {% endcomment %}
+        <a class="btn btn-seconday" href="{% url 'futures_transfer_history' binance_account_id.id %}">Historial de transacciones futuras</a>
+        <a class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2"
+           href="{% url 'delete_binance_account' binance_account_id.id %}">Eliminar</a>
+    </div>
+</div>
+
+<!-- Modal Credencials -->
+<div class="modal fade"
+     id="CredencialsModal{{ binance_account_id.id }}"
+     tabindex="-1"
+     aria-labelledby="CredencialsModal{{ binance_account_id.id }}Label"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="CredencialsModal{{ binance_account_id.id }}Label">Credenciales</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <label for="api_key_input">API Key:</label>
+                <input id="api_key_input" class="form-control" type="text" value="{{ binance_account_id.api_key }}" readonly>
+                <br>
+                <label for="secret_input">Secret:</label>
+                <input id="secret_input" class="form-control" type="text" value="{{ binance_account_id.secret }}" readonly>
+            </div>            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>

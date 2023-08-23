@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}
+    | Nueva Cuenta de Binance
+{% endblock title %}
+{% load static i18n %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/forms.css' %}" />
+{% endblock head %}
+{% block container %}
+    <form method="post">
+        <div class="m-auto container mt-5">
+            {% csrf_token %}
+            <div class="mb-4 row">
+                <div class="mb-3 col-md-6">
+                    <div class="form-floating m-2">
+                        {{ form.name }}
+                        {{ form.name.label_tag }}
+                    </div>
+                    <div class="form-floating m-2">
+                        {{ form.code }}
+                        {{ form.code.label_tag }}
+                    </div>
+                </div>
+                <div class="mb-3 col-md-6">
+                    <div class="form-floating m-2">
+                        {{ form.api_key }}
+                        {{ form.api_key.label_tag }}
+                    </div>
+                    <div class="form-floating m-2">
+                        {{ form.secret }}
+                        {{ form.secret.label_tag }}
+                    </div>
+                </div>
+                <div class="mb-3 col-md-3">
+                    <button class="btn btn-primary" type="submit">Crear Cuenta</button>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock container %}

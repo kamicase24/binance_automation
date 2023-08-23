@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}
+    | Home
+{% endblock title %}
+{% load static i18n %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/forms.css' %}" />
+{% endblock head %}
+{% block container %}
+    {% if user.is_authenticated %}
+        {% include "dasboard.html" %}
+    {% else %}
+        {% include "login_form.html" %}
+    {% endif %}
+{% endblock container %}

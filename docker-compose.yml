@@ -1,0 +1,69 @@
+version: '3'
+
+volumes:
+  local_postgres_data: {}
+  local_postgres_data_backups: {}
+
+services:
+  django: &django
+    build:
+      context: .
+      dockerfile: ./compose/local/django/Dockerfile
+    image: binance_automation_local_django
+    container_name: binance_automation_django
+    depends_on:
+      - postgres
+    volumes:
+      - .:/app:z
+    env_file:
+      - ./.envs/.local/.django
+      - ./.envs/.local/.postgres
+    ports:
+      - "8000:8000"
+    command: /start
+
+  postgres:
+    build:
+      context: .
+      dockerfile: ./compose/production/postgres/Dockerfile
+    image: binance_automation_postgres
+    container_name: binance_automation_postgres
+    volumes:
+      - local_postgres_data:/var/lib/postgresql/data:Z
+      - local_postgres_data_backups:/backups:z
+    env_file:
+      - ./.envs/.local/.postgres
+    ports:
+      - 5432:5432
+
+  redis:
+    image: redis:5.0
+    container_name: binance_automation_redis
+
+  celery:
+    <<: *django
+    image: binance_automation_local_celery
+    container_name: binance_automation_celery
+    ports:
+      - 1337:8000
+    depends_on:
+      - redis
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=Oyu9fAunQIuyAl31j93Kx4nUZP2sBD7MVMzYnBjIiuJ98krxfDQj3evkj7orUlBD
+    command: celery -A config.celery worker -l info
+
+  celery-beat:
+    <<: *django
+    image: binance_automation_local_celery_beat
+    container_name: binance_automation_celery_beat
+    ports:
+      - 1338:8000
+    depends_on:
+      - redis
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=Oyu9fAunQIuyAl31j93Kx4nUZP2sBD7MVMzYnBjIiuJ98krxfDQj3evkj7orUlBD
+    command: celery -A config.celery beat -l info
+
+
